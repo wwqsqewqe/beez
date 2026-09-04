@@ -2938,8 +2938,6 @@ document.querySelectorAll('.engine').forEach(function(el){el.onclick=function(){
 function doSearch() {
   var q = document.getElementById('mainSearch').value.trim();
   if (!q) return;
-
-  // Always treat it as a URL or search through proxy
   var url = q.indexOf('http') === 0 ? q : 'https://' + q;
   doProxy(url);
 }
@@ -2978,11 +2976,18 @@ async function doProxy(urlFromSearch) {
 
     if (!window.scramjet) {
       window.scramjet = new ScramjetController({
-        prefix: '/beez/scramjet/',
-        files: {
-     wasm: '/beez/scramjet/scramjet.wasm',
-     all: '/beez/scramjet/scramjet.js'        }
-      });
+       await navigator.serviceWorker.register('/beez/sw.js');
+
+window.scramjet = new ScramjetController({
+ await navigator.serviceWorker.register('/beez/sw.js');
+
+window.scramjet = new ScramjetController({
+  prefix: '/beez/scramjet/',
+  files: {
+    wasm: '/beez/scramjet/scramjet.wasm',
+    all: '/beez/scramjet/scramjet.js'
+  }
+});
       await window.scramjet.init();
     }
 
